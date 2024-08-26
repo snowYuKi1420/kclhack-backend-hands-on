@@ -12,6 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       // リクエストの中のcontentを取得
       const newContent = await req.body.content
+
+      // リクエストの中のnameを取得
+      const newName = await req.body.name
+
       // contentが存在しない場合，BadRequestを返す
       if (newContent == null) {
         res.status(400).json({ message: 'content is required' })
@@ -22,10 +26,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).json({ message: 'content is empty' })
         break
       }
+
+      // nameが存在しない場合，BadRequestを返す
+      if (newName == null) {
+        res.status(400).json({ message: 'name is required' })
+        break
+      }
+      // nameが空文字列の場合，BadRequestを返す
+      if (newName === '') {
+        res.status(400).json({ message: 'name is empty' })
+        break
+      }
       // データベースに新しい投稿を作成
       try {
         const newPost = await prisma.posts.create({
           data: {
+            name: newName,
             content: newContent,
           }
         })

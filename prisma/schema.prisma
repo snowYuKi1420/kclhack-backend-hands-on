@@ -12,6 +12,7 @@ datasource db {
 
 model posts {
   id        Int      @id @default(autoincrement())
+  name String
   content   String
   createdAt DateTime @default(now())
 }
